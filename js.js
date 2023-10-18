@@ -4,9 +4,11 @@ const clearToDoList = document.getElementById("clearButton");
 const toDoList = document.getElementById("todoList");
 
 function addTask() {
-  const value = valueTodo.value;
+  let value = valueTodo.value;
   valueTodo.value = "";
-
+  if (value === "") {
+    return;
+  }
   const li = document.createElement("li");
 
   li.style.display = "flex";
@@ -21,56 +23,95 @@ function addTask() {
   todoText.style.margin = 0;
   todoText.style.fontWeight = 600;
 
-  const taskBtns = document.createElement("div");
-  taskBtns.style.display = "flex";
-  taskBtns.style.gap = "10px";
+  const taskBans = document.createElement("div");
+  taskBans.style.display = "flex";
+  taskBans.style.gap = "10px";
 
   const btnEdit = document.createElement("button");
   btnEdit.textContent = "Edit";
   btnEdit.classList.add("btn");
   btnEdit.classList.add("btn-primary");
 
-  const btnComplate = document.createElement("button");
-  btnComplate.textContent = "Complate";
-  btnComplate.classList.add("btn");
-  btnComplate.classList.add("btn-success");
+  const btnComplete = document.createElement("button");
+  btnComplete.textContent = "Complete";
+  btnComplete.classList.add("btn");
+  btnComplete.classList.add("btn-success");
 
   const btnDelete = document.createElement("button");
   btnDelete.textContent = "Delete";
   btnDelete.classList.add("btn");
   btnDelete.classList.add("btn-danger");
 
-  let isComplate = false;
-  btnComplate.addEventListener("click", function () {
-    isComplate = !isComplate;
-    if (isComplate) {
+  let isComplete = false;
+  btnComplete.addEventListener("click", function () {
+    isComplete = !isComplete;
+    if (isComplete) {
       todoText.style.textDecoration = "line-through";
       todoText.style.opacity = "0.5";
-      btnComplate.textContent = "Uncomplate";
-      btnComplate.classList.add("btn-warning");
-      btnComplate.classList.remove("btn-success");
+      btnComplete.textContent = "Uncompleted";
+      btnComplete.classList.add("btn-warning");
+      btnComplete.classList.remove("btn-success");
     } else {
-      todoText.textContent = "Complate";
+      btnComplete.textContent = "Complete";
       todoText.style.textDecoration = "none";
       todoText.style.opacity = "1";
-      btnComplate.classList.add("btn-success");
-
-      btnComplate.classList.remove("btn-warning");
+      btnComplete.classList.add("btn-success");
+      btnComplete.classList.remove("btn-warning");
     }
   });
+  // ////////////////////////////////////////////////////
+  btnEdit.addEventListener("click", function () {
+    todoText.style.display = "none";
+    const editInput = document.createElement("input");
+    btnEdit.style.display = "none";
+    editInput.style.color = "red";
+    editInput.value = value;
+    li.prepend(editInput);
+    const cancelBtn = document.createElement("button");
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.classList.add("btn-primary");
+    cancelBtn.classList.add("btn-warning");
+    const ok = document.createElement("button");
+    ok.textContent = "ok";
+    ok.classList.add("btn-primary");
+    ok.classList.add("btn");
+    btnComplete.style.display = "none";
+    btnDelete.style.display = "none";
+    ok.addEventListener("click", function () {
+      editInput.style.display = "none";
+      todoText.style.display = "flex";
+      value = editInput.value || value;
+      todoText.textContent = value;
 
-  btnEdit.addEventListener("click", function () {});
+      ok.remove();
+      cancelBtn.remove();
+      btnComplete.style.display = "block";
+      btnDelete.style.display = "block";
+      btnEdit.style.display = "block";
+    });
+    cancelBtn.addEventListener("click", function () {
+      editInput.style.display = "none";
+      todoText.style.display = "flex";
+      ok.remove();
+      cancelBtn.remove();
+      btnComplete.style.display = "block";
+      btnDelete.style.display = "block";
+      btnEdit.style.display = "block";
+    });
+    taskBans.prepend(cancelBtn);
+    taskBans.prepend(ok);
+  });
 
   btnDelete.addEventListener("click", function () {
     li.remove();
   });
-
-  taskBtns.append(btnEdit);
-  taskBtns.append(btnComplate);
-  taskBtns.append(btnDelete);
+  // ///////////////////////////////////////////////////////////////////////////////////
+  taskBans.append(btnEdit);
+  taskBans.append(btnComplete);
+  taskBans.append(btnDelete);
 
   li.append(todoText);
-  li.append(taskBtns);
+  li.append(taskBans);
 
   toDoList.prepend(li);
 }
@@ -83,3 +124,5 @@ addToDo.addEventListener("click", addTask);
 clearToDoList.addEventListener("click", function () {
   toDoList.innerHTML = "";
 });
+
+// respansivlik
